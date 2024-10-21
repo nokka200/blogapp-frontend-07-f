@@ -1,9 +1,11 @@
-const Notification = ({ notification }) => {
-  if (!notification) {
+import { useContext } from 'react';
+import BloglistContext from '../context/BloglistContext';
+
+const Notification = () => {
+  const { message, type } = useContext(BloglistContext);
+  if (!message) {
     return null;
   }
-
-  const { message, type } = notification;
 
   const style = {
     backgroundColor: 'lightgrey',

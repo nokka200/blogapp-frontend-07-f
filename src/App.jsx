@@ -1,4 +1,4 @@
-import { useState, useEffect, createRef } from 'react';
+import { useState, useEffect, createRef, useContext } from 'react';
 
 import blogService from './services/blogs';
 import loginService from './services/login';
@@ -7,12 +7,14 @@ import Login from './components/Login';
 import Blog from './components/Blog';
 import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
+import BloglistContext from './context/BloglistContext';
 import Togglable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState(null);
+  //const [notification, setNotification] = useState(null);
+  const { setError, setStyle } = useContext(BloglistContext);
 
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
@@ -28,9 +30,10 @@ const App = () => {
   const blogFormRef = createRef();
 
   const notify = (message, type = 'success') => {
-    setNotification({ message, type });
+    setError(message);
+    setStyle(type);
     setTimeout(() => {
-      setNotification(null);
+      setError(null);
     }, 5000);
   };
 
@@ -81,7 +84,7 @@ const App = () => {
     return (
       <div>
         <h2>blogs</h2>
-        <Notification notification={notification} />
+        <Notification />
         <Login doLogin={handleLogin} />
       </div>
     );
@@ -92,7 +95,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification notification={notification} />
+      <Notification />
       <div>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>

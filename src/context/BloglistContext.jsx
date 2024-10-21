@@ -1,20 +1,27 @@
-import { createContext, useState, useContext } from 'react';
+import { createContext, useState } from 'react';
 const BloglistContext = createContext();
 
 const useBloglist = () => {
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState('');
+  const [type, setType] = useState('');
 
   const setError = (message) => {
-    setErrorMessage(message);
+    setMessage(message);
+  };
+
+  const setStyle = (type) => {
+    setType(type);
   };
 
   const clearError = () => {
-    setErrorMessage(null);
+    setMessage(null);
   };
 
   return {
-    errorMessage,
+    message,
+    type,
     setError,
+    setStyle,
     clearError,
   };
 };
@@ -27,10 +34,6 @@ export const BloglistProvider = ({ children }) => {
       {children}
     </BloglistContext.Provider>
   );
-};
-
-export const useBloglistContext = () => {
-  return useContext(BloglistContext);
 };
 
 export default BloglistContext;
