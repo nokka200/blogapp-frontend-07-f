@@ -16,16 +16,16 @@ const App = () => {
   //const [notification, setNotification] = useState(null);
   const { setError, setStyle } = useContext(BloglistContext);
 
+  /*
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
+  */
   const result = useQuery({
     queryKey: 'blogs',
     queryFn: blogService.getAll,
+    onSuccess: (data) => setBlogs(data),
   });
-  if (!result.isLoading) {
-    console.log('query result', result);
-  }
 
   useEffect(() => {
     const user = storage.loadUser();
@@ -86,6 +86,10 @@ const App = () => {
       notify(`Blog ${blog.title}, by ${blog.author} removed`);
     }
   };
+
+  if (result.isLoading) {
+    return <div>Loading...</div>;
+  }
 
   if (!user) {
     return (
