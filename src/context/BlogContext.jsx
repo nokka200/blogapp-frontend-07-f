@@ -4,12 +4,20 @@ const BlogContext = createContext();
 const useBlog = () => {
   const [blogs, setBlogs] = useState([]);
 
-  const addNewBlog = (newBlog) => {
-    setBlogs(blogs.concat(newBlog));
+  const setUpBlog = (data) => {
+    setBlogs(data);
   };
 
   return {
     blogs,
-    addNewBlog,
+    setUpBlog,
   };
 };
+
+export const BlogProvider = ({ children }) => {
+  const blog = useBlog();
+
+  return <BlogContext.Provider value={blog}>{children}</BlogContext.Provider>;
+};
+
+export default BlogContext;

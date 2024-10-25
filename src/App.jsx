@@ -9,30 +9,36 @@ import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import BloglistContext from './context/BloglistContext';
 import Togglable from './components/Togglable';
+import BlogContext from './context/BlogContext';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState(null);
   //const [notification, setNotification] = useState(null);
   const { setError, setStyle } = useContext(BloglistContext);
-
+  //const { blogs, setUpBlog } = useContext(BlogContext);
   /*
   useEffect(() => {
     blogService.getAll().then((blogs) => setBlogs(blogs));
   }, []);
-  */
-  const result = useQuery({
-    queryKey: 'blogs',
-    queryFn: blogService.getAll,
-    onSuccess: (data) => setBlogs(data),
-  });
-
+*/
   useEffect(() => {
     const user = storage.loadUser();
     if (user) {
       setUser(user);
     }
   }, []);
+
+  const { data, error, isLoading } = useQuery({
+    queryKey: ['blogs'],
+    queryFn: blogService.getAll,
+  });
+
+  useEffect(() => {
+    if (data) {
+      setBlogs(data);
+    }
+  }, [data]);
 
   const blogFormRef = createRef();
 
@@ -87,10 +93,6 @@ const App = () => {
     }
   };
 
-  if (result.isLoading) {
-    return <div>Loading...</div>;
-  }
-
   if (!user) {
     return (
       <div>
@@ -102,7 +104,9 @@ const App = () => {
   }
 
   const byLikes = (a, b) => b.likes - a.likes;
-
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
   return (
     <div>
       <h2>blogs</h2>
